@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CsrfFilter;
  
 /**
  * 
@@ -21,13 +22,14 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 
     //Set username, password and role
     //The role can be used to allow role-specific actions
+    //Current roles are "USER" and "ADMIN".
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .inMemoryAuthentication()
                 .withUser("test").password("test").roles("USER")
                 .and()
-                .withUser("Anton").password("qwertasdf").roles("ADMIN"); //login with user and password
+                .withUser("admin").password("admin").roles("ADMIN"); //login with user and password
     }
     
     //Custom login configuration. Currently redirects to "/login" when not logged in
@@ -50,7 +52,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
             .logout()
                 .permitAll()
                 .and()
-            .csrf().disable(); //Might be problems with invalid csrf token
+            .csrf().disable(); //There are problems with invalid csrf token, so disable csrf for now
     }
     
     

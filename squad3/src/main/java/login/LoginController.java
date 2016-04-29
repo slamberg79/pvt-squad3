@@ -49,6 +49,17 @@ public class LoginController {
 
     }
     
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
+    public ModelAndView adminPage() {
+
+        ModelAndView model = new ModelAndView();
+        model.addObject("title", "Admin page");
+        model.addObject("message", "You are logged in as admin!");
+        model.setViewName("admin");
+        return model;
+
+    }
+    
     /*
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
     public ModelAndView logoutPage(){
