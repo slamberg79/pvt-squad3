@@ -19,7 +19,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 
-	
+    //@Autowired
+    //CustomLoginHandler customLoginHandler;
+    
     //Set username, password and role
     //The role can be used to allow role-specific actions
     //Current roles are "USER" and "ADMIN".
@@ -49,8 +51,10 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
                 .and()
             .formLogin()
                 .loginPage("/login")
+                //.usernameParameter("username").passwordParameter("password")
                 .permitAll()
                 .defaultSuccessUrl("/loggedin", true) //always redirect to "/loggedin"
+                //.successHandler(customLoginHandler)
                 .and()
             .logout()
                 .logoutUrl("/logout")
