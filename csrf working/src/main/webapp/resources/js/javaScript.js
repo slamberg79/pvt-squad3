@@ -5,12 +5,6 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var parameter = $("meta[name='_csrf_parameter']").attr("content");
 var usrname;
 var passwd;
-$("body").bind("ajaxSend", function(elm, xhr, s){
-   if (s.type == "POST") {
-		console.log("TEST in bind");
-		xhr.setRequestHeader(getCSRFHeader(), getCSRFToken());
-   }
-});
 
 function getCSRFHeader() {
 	return header;
@@ -57,24 +51,21 @@ var LoginForm = React.createClass({
             alert("Wrong username or password");
            
         }
-        
     },
 	
     submitLogin: function(){
-    	console.log("TEST in submit: " + getCSRFParameter() );
     	$.ajax({
             type: "POST",
             url: "/user",
-            data: JSON.stringify({ name : "Fpass", password : "Uname" }),
+            data: JSON.stringify({ name : $("#Uname").val(), password : $("#Fpass").val() }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
 			beforeSend: function(xhr) {
-				console.log("Before send!" + getCSRFToken());
-				xhr.setRequestHeader("X-CSRF-Token", getCSRFToken());
+				xhr.setRequestHeader(header, token);
 			},
-            success: function(data){console.log("SUCCESS");},
+            success: function(data){alert(data);},
             failure: function(errMsg) {
-                console.log("FAIL");
+                alert(errMsg);
             }
         });
     },
@@ -86,7 +77,6 @@ var LoginForm = React.createClass({
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data){
-				console.log("AYYYYY" + data.name + " " + data.password);
                 this.setState({nameResponse: data.name});
                 this.setState({passwordResponse: data.password});
             }.bind(this),
@@ -105,17 +95,17 @@ var LoginForm = React.createClass({
             <h1>Student Capture</h1>
             </div>
             <div class="row">
-                <div class="four columns">
-                    <input class="u-full-width" type="text" 
-                           placeholder="Username" id="Uname" name="username"/>
-                </div>
+            <div class="four columns">
+                <input class="u-full-width" type="text" 
+                       placeholder="Username" id="Uname" name="username"/>
             </div>
-            <div class="row">
-                <div class="four columns">
-                    <input class="u-full-width" type="password" 
-                           placeholder="Password" id="Fpass" name="password"/>
-                </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <input class="u-full-width" type="password" 
+                       placeholder="Password" id="Fpass" name="password"/>
             </div>
+        </div>
             <input type="hidden"
 			name={getCSRFParameter()}
 			value={getCSRFToken()} />
