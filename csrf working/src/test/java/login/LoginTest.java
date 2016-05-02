@@ -3,7 +3,6 @@ package login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import org.junit.Before;
@@ -45,6 +44,7 @@ public class LoginTest extends SpringLoginApplicationTests{
     
     private MockMvc mockMvc;
     
+    //CSRF token generator, to be able to send http post
     HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
     CsrfToken csrfToken = httpSessionCsrfTokenRepository.generateToken(new MockHttpServletRequest());
 
@@ -147,7 +147,8 @@ public class LoginTest extends SpringLoginApplicationTests{
                 .andExpect(redirectedUrl("/loggedin"));
                 */
         
-        mockMvc.perform(post("/logout").with(csrf()))
+        mockMvc.perform(post("/logout")
+                .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/login?logout"));
        
