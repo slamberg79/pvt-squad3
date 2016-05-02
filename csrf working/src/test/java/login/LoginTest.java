@@ -4,11 +4,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -19,6 +23,10 @@ public class LoginTest extends SpringLoginApplicationTests{
     private WebApplicationContext context;
     
     private MockMvc mockMvc;
+    
+    HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
+    CsrfToken csrfToken = httpSessionCsrfTokenRepository.generateToken(new MockHttpServletRequest());
+
     
     @Before
     public void setup() {
@@ -60,6 +68,24 @@ public class LoginTest extends SpringLoginApplicationTests{
     @WithMockUser(roles="ADMIN")
     public void getAdminPageAsAdmin() throws Exception{
         mockMvc.perform(get("/admin")).andExpect(status().isOk());
+    }
+    
+    @Test
+    public void loginAsUser() throws Exception{
+        mockMvc.perform(post("/login")
+                .with(csrf()) //csrf is required
+                .param("username", "test")
+                .param("password", "test"))
+                .andExpect(redirectedUrl("/loggedin"));
+    }
+    
+    @Test
+    public void loginWrongUsername() throws Exception{
+        mockMvc.perform(post("/login")
+                .with(csrf()) //csrf is required
+                .param("username", "error")
+                .param("password", "test"))
+                .andExpect(redirectedUrl("/login?error"));
     }
  
 
