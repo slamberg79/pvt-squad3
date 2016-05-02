@@ -17,6 +17,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * 
+ * JUnit tests for the login system.
+ * 
+ * 
+ * 2016-05-02
+ * Current working user is: 
+ *      username: test
+ *      password: test
+ * Current working admin is:
+ *      username: admin
+ *      password: admin
+ * 
+ * 
+ * 
+ * @author c13hbd
+ *
+ */
 public class LoginTest extends SpringLoginApplicationTests{
 
     @Autowired
@@ -76,39 +94,49 @@ public class LoginTest extends SpringLoginApplicationTests{
                 .with(csrf()) //csrf is required
                 .param("username", "test")
                 .param("password", "test"))
+                .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/loggedin"));
     }
     
     @Test
-    public void loginWrongUsername() throws Exception{
+    public void loginWrongDetails() throws Exception{
+        
+        //Wrong username
         mockMvc.perform(post("/login")
                 .with(csrf()) //csrf is required
                 .param("username", "error")
                 .param("password", "test"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?error"));
+        
+        //Wrong password
+        mockMvc.perform(post("/login")
+                .with(csrf()) //csrf is required
+                .param("username", "error")
+                .param("password", "test"))
+                .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/login?error"));
     }
+    
+    @Test
+    public void logout() throws Exception{
+        
+        
+        //TODO: require login to be able to logout ?
+        /*
+        //Login as user
+        mockMvc.perform(post("/login")
+                .with(csrf()) //csrf is required
+                .param("username", "test")
+                .param("password", "test"))
+                .andExpect(redirectedUrl("/loggedin"));
+                */
+        
+        mockMvc.perform(post("/logout").with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?logout"));
+       
+        
+    }
  
-
-    /*
-
-    //Not sure what perform(formLogin()) does, or what status is expected. 
-    //There must be a better way to test a user logging in.
-    
-    @Test
-    public void loginAsUser() throws Exception{
-        mockMvc.perform(formLogin("/login").user("test").password("test")).andExpect(status().isFound());
-    }
-    
-    @Test
-    public void loginWrongUsername() throws Exception{
-        mockMvc.perform(formLogin("/login").user("error").password("test")).andExpect(status().isUnauthorized());
-    }
-    
-    @Test
-    public void loginWrongPassword() throws Exception{
-        mockMvc.perform(formLogin("/login").user("test").password("error")).andExpect(status().isUnauthorized());
-    }
-    
-    */
-
 }
