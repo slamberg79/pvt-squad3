@@ -13,10 +13,13 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 /**
  * 
+ * TODO: Implement this class
+ * 
  * Custom login handler to redirect different roles to different pages.
  * 
  * For example, ADMIN will be redirected to /admin, while USER will be redirected to /loggedin.
  * 
+ * This will be used in LoginSecurityConfig.java as a custom login handler.
  * 
  * @author c13hbd
  *
@@ -27,6 +30,7 @@ public class CustomLoginHandler extends SimpleUrlAuthenticationSuccessHandler{
     
     protected void redirect(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
+        
     }
 
 }

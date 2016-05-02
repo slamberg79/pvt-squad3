@@ -29,6 +29,11 @@ public class LoginController {
     }
     
     
+    /**
+     * TODO: Refactor these ModelAndView methods
+     * 
+     */
+    
     @RequestMapping(value = {"/loggedin"}, method = RequestMethod.GET)
     public ModelAndView loggedinPage() {
 
@@ -36,6 +41,17 @@ public class LoginController {
         model.addObject("title", "Loggedin page");
         model.addObject("message", "You are logged in!");
         model.setViewName("loggedin");
+        return model;
+
+    }
+    
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
+    public ModelAndView adminPage() {
+
+        ModelAndView model = new ModelAndView();
+        model.addObject("title", "Admin page");
+        model.addObject("message", "You are logged in as admin!");
+        model.setViewName("admin");
         return model;
 
     }

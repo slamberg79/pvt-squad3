@@ -107,13 +107,13 @@ var LoginForm = React.createClass({
             <div class="row">
                 <div class="four columns">
                     <input class="u-full-width" type="text" 
-                           placeholder="Username" id="Uname" />
+                           placeholder="Username" id="Uname" name="username"/>
                 </div>
             </div>
             <div class="row">
                 <div class="four columns">
                     <input class="u-full-width" type="password" 
-                           placeholder="Password" id="Fpass" />
+                           placeholder="Password" id="Fpass" name="password"/>
                 </div>
             </div>
             <input type="hidden"

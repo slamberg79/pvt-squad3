@@ -22,13 +22,14 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 	
     //Set username, password and role
     //The role can be used to allow role-specific actions
+    //Current roles are "USER" and "ADMIN".
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .inMemoryAuthentication()
                 .withUser("test").password("test").roles("USER")
                 .and()
-                .withUser("Anton").password("qwertasdf").roles("ADMIN"); //login with user and password
+                .withUser("admin").password("admin").roles("ADMIN"); //login with user and password
     }
     
     
@@ -46,17 +47,17 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/user").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
+            .formLogin()
                 .loginPage("/login")
+                //.usernameParameter("username").passwordParameter("password")
                 .permitAll()
                 .defaultSuccessUrl("/loggedin", true) //always redirect to "/loggedin"
                 .and()
             .logout()
-            .logoutUrl("/logout")
+                .logoutUrl("/logout")
                 .permitAll()
                 .and()
-           
-            .csrf(); //Might be problems with invalid csrf token
+            .csrf(); //Might be problems with invalid csrf token. Enabled by default?
     }
     
     
