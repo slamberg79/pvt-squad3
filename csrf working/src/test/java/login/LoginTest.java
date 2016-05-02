@@ -29,6 +29,9 @@ import org.springframework.web.context.WebApplicationContext;
  * Current working admin is:
  *      username: admin
  *      password: admin
+ *      
+ * @WithMockUser(roles="USER") mocks the role USER, 
+ * so that no post login is required in the test.
  * 
  * 
  * 
@@ -56,26 +59,37 @@ public class LoginTest extends SpringLoginApplicationTests{
     
     @Test
     public void getLoginPage() throws Exception{
-        mockMvc.perform(get("/login")).andExpect(status().isOk());
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk());
     }
     
     @Test
-    public void getLoggedInPage() throws Exception{
-        mockMvc.perform(get("/loggedin")).andExpect(status().isFound()); //Expect redirection to login page (status <302>)
+    public void getUserPageWhenNotLoggedIn() throws Exception{
+        mockMvc.perform(get("/loggedin"))
+                .andExpect(status().isFound()); //Expect redirection to login page (status <302>)
     }
     
     @Test
     @WithMockUser(roles="USER")
-    public void getUserPageAsUser() throws Exception{
-        mockMvc.perform(get("/loggedin")).andExpect(status().isOk());
+    public void checkUserRights() throws Exception{
+        mockMvc.perform(get("/loggedin"))
+                .andExpect(status().isOk());
+        
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isForbidden());
     }
     
     @Test
     @WithMockUser(roles="ADMIN")
-    public void getUserPageAsAdmin() throws Exception{
-        mockMvc.perform(get("/loggedin")).andExpect(status().isForbidden());
+    public void checkAdminRights() throws Exception{
+        mockMvc.perform(get("/loggedin"))
+                .andExpect(status().isForbidden());
+        
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk());
     }
     
+    /*
     @Test
     @WithMockUser(roles="USER")
     public void getAdminPageAsUser() throws Exception{
@@ -87,6 +101,7 @@ public class LoginTest extends SpringLoginApplicationTests{
     public void getAdminPageAsAdmin() throws Exception{
         mockMvc.perform(get("/admin")).andExpect(status().isOk());
     }
+    */
     
     @Test
     public void loginAsUser() throws Exception{
