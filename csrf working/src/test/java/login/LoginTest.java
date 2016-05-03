@@ -83,7 +83,7 @@ public class LoginTest extends SpringLoginApplicationTests{
     @WithMockUser(roles="ADMIN")
     public void checkAdminRights() throws Exception{
         mockMvc.perform(get("/loggedin"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
         
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk());
