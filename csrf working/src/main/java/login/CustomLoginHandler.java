@@ -11,6 +11,15 @@ import org.springframework.stereotype.Component;
 
 /**
  * 
+ * NOTE: This class might not be required for our product, but the functionality exists if needed.
+ * 
+ * 
+ * TODO: Fix problem:
+ *      After trying to access /random, the user will be redirected to /login.
+ *      After logging in, the user will be redirected to /random, instead of /loggedin.
+ *      
+ *      This is currently solved by directly going to /login and logging in as normal.
+ * 
  * 
  * 
  * Custom login handler to redirect different roles to different pages.
@@ -35,13 +44,16 @@ public class CustomLoginHandler extends SavedRequestAwareAuthenticationSuccessHa
         //Get role of the logged in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().toString();
+        
+        System.out.println("requested is: " + request.getRequestURI());
 
         //Select url based on role
         String targetUrl = "";
         if(role.contains("USER")) {
-            System.out.println("QEWWEYTUGAD");
+            System.out.println("User detected");
             targetUrl = USER_URL;
         } else if(role.contains("ADMIN")) {
+            System.out.println("Admin detected");
             targetUrl = ADMIN_URL;
         }
         return targetUrl;

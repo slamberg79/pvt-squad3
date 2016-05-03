@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.savedrequest.NullRequestCache;
  
 /**
  * 
@@ -19,8 +20,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
 
-    //@Autowired
-    //CustomLoginHandler customLoginHandler;
+    @Autowired
+    CustomLoginHandler customLoginHandler;
+    
     
     //Set username, password and role
     //The role can be used to allow role-specific actions
@@ -40,10 +42,12 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
     //Allows for custom login.html
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        
+        
         http
             .authorizeRequests()
                 .antMatchers("/resources/**").permitAll() //Everyone can access /resources
-                .antMatchers("/loggedin").access("hasRole('USER')") //Users can access /loggedin
+                .antMatchers("/loggedin").access("hasRole('USER') or hasRole('ADMIN')") //Users and admins can access /loggedin
                 .antMatchers("/admin").access("hasRole('ADMIN')") //Admins can access /admin
                 .antMatchers("/login").permitAll()
                 .antMatchers("/user").permitAll()
