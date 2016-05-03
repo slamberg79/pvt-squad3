@@ -1,24 +1,17 @@
 package login;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 
 /**
  * 
- * TODO: Implement this class properly. Not sure if this will work atm
+ * 
  * 
  * Custom login handler to redirect different roles to different pages.
  * 
@@ -31,49 +24,27 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class CustomLoginHandler extends SimpleUrlAuthenticationSuccessHandler{
-    
+public class CustomLoginHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+   
     private static String ADMIN_URL = "/admin";
     private static String USER_URL = "/loggedin";
     
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    
-    protected void redirect(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException {
+    @Override
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
         
-        String target = getTargetUrl(authentication);
-        
-        redirectStrategy.sendRedirect(request, response, target);
-        
-    }
+        //Get role of the logged in user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().toString();
 
-    private String getTargetUrl(Authentication authentication) {
-        
-        String url = "";
-        
-        Collection<? extends GrantedAuthority> authorities =  authentication.getAuthorities();
-
-        List<String> roles = new ArrayList<String>();
-        
-        for (GrantedAuthority a : authorities) {
-            roles.add(a.getAuthority());
-            System.out.println(a.getAuthority());
+        //Select url based on role
+        String targetUrl = "";
+        if(role.contains("USER")) {
+            System.out.println("QEWWEYTUGAD");
+            targetUrl = USER_URL;
+        } else if(role.contains("ADMIN")) {
+            targetUrl = ADMIN_URL;
         }
-        
-        if(roles.contains("ROLE_ADMIN")){
-            url = ADMIN_URL;
-        }else if(roles.contains("ROLE_USER")){
-            url = USER_URL;
-        }
-        
-        return url;
-    }
-    
-    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-        this.redirectStrategy = redirectStrategy;
-    }
-    protected RedirectStrategy getRedirectStrategy() {
-        return redirectStrategy;
+        return targetUrl;
     }
 
 }

@@ -51,10 +51,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter{
                 .and()
             .formLogin()
                 .loginPage("/login")
-                //.usernameParameter("username").passwordParameter("password")
                 .permitAll()
+                //.successHandler(customLoginHandler) //Custom redirection based on role
                 .defaultSuccessUrl("/loggedin", true) //always redirect to "/loggedin"
-                //.successHandler(customLoginHandler)
                 .and()
             .logout()
                 .logoutUrl("/logout")

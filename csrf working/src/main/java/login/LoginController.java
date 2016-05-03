@@ -56,6 +56,7 @@ public class LoginController {
 
     }
     */
+    /*
     @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
     public ModelAndView adminPage() {
 
@@ -65,5 +66,6 @@ public class LoginController {
         model.setViewName("admin");
         return model;
     }
+    */
     
 }

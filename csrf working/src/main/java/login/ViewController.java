@@ -8,12 +8,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ViewController {
 	
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String index() {
+    public String getLogin() {
         return "login";
     }
     
     @RequestMapping(value = "/loggedin", method = RequestMethod.GET)
-    public String index2() {
+    public String getLoggedin() {
         return "loggedin";
     }
+    
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String getAdmin() {
+        return "admin";
+    }
+    
+    
 }	

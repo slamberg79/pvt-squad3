@@ -127,8 +127,8 @@ public class LoginTest extends SpringLoginApplicationTests{
         //Wrong password
         mockMvc.perform(post("/login")
                 .with(csrf()) //csrf is required
-                .param("username", "error")
-                .param("password", "test"))
+                .param("username", "test")
+                .param("password", "error"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/login?error"));
     }
